@@ -1,0 +1,6 @@
+server:
+  servlet:
+    context-path: /demoAdmin
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8

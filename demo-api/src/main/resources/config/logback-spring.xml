@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="3 seconds">
+
+    <property name="LOG_HOME" value="temp/logs"/>
+
+    <appender name="CONSOLE-LOGGER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %level %logger{200}.%M:%line - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="FILE-LOGGER" class="ch.qos.logback.classic.sift.SiftingAppender">
+
+        <discriminator>
+            <key>logFileName</key>
+            <defaultValue>demo_api</defaultValue>
+        </discriminator>
+
+        <sift>
+            <appender name="FILE-${logFileName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${LOG_HOME}/${logFileName}.log</file>
+
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>
+                        %d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %level %logger{200}.%M:%line - %msg%n
+                    </Pattern>
+                </encoder>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <FileNamePattern>${LOG_HOME}/${logFileName}.%d{yyyy-MM-dd}.log</FileNamePattern>
+                    <!--最多保留N天log-->
+                    <maxHistory>30</maxHistory>
+                </rollingPolicy>
+
+            </appender>
+
+        </sift>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="FILE-LOGGER"/>
+    </root>
+
+    <logger name="com.it.demo" level="info" additivity="false">
+        <appender-ref ref="FILE-LOGGER"/>
+        <appender-ref ref="CONSOLE-LOGGER"/>
+    </logger>
+
+
+    <logger name="org.springframework" level="error" additivity="false">
+        <appender-ref ref="FILE-LOGGER"/>
+    </logger>
+
+    <logger name="com.ibatis" level="debug" additivity="false">
+        <appender-ref ref="FILE-LOGGER"/>
+        <appender-ref ref="CONSOLE-LOGGER"/>
+    </logger>
+
+    <logger name="java.sql" level="debug" additivity="false">
+        <appender-ref ref="FILE-LOGGER"/>
+        <appender-ref ref="CONSOLE-LOGGER"/>
+    </logger>
+
+
+</configuration>
